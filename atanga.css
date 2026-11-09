@@ -1,0 +1,547 @@
+/* =====================================================================
+   Atanga · feuille de la page. Le moteur (scrollcraft.css) n'est jamais modifié :
+   on règle ses jetons ici, puis on écrit nos propres classes.
+   ===================================================================== */
+/* Un élément masqué par le script reste masqué, quel que soit son display. */
+[hidden] { display: none !important; }
+
+:root {
+  /* Jetons du moteur */
+  --sc-canvas:     #0f0c0a;
+  --sc-surface:    #1a1411;
+  --sc-ink:        #f2ebdf;
+  --sc-ink-soft:   #bdb1a1;
+  --sc-accent:     #d9893b;
+  --sc-accent-ink: #160f0a;
+  --sc-font-display: "Fraunces", Georgia, serif;
+  --sc-font-text:    "Figtree", system-ui, sans-serif;
+
+  /* Palette de la maison : la nuit, la braise, la latérite, l'os */
+  --nuit:     #0f0c0a;
+  --charbon:  #1a1411;
+  --os:       #f2ebdf;
+  --papier:   #ece3d3;
+  --papier-2: #e2d6c1;
+  --encre:    #231c16;
+  --encre-2:  #5c4f42;
+  --terre:    #a3472b;
+  --terre-f:  #7f3420;
+  --ambre:    #d9893b;
+  --bois:     #8a5a34;
+  --bois-c:   #b98552;
+  --carbone:  #2d3b55;
+  --main:     "Caveat", "Segoe Print", cursive;
+
+  --carnet-l: 15.5rem;
+  --bord: clamp(1.25rem, 4vw, 4.5rem);
+  color-scheme: dark;
+}
+
+html { scroll-padding-top: 5rem; }
+body { background: var(--nuit); color: var(--os); font-family: var(--sc-font-text); }
+/* height: auto rend la main à aspect-ratio : sans elle, l'attribut height="1200" des <img>
+   impose sa hauteur en pixels (portraits des producteurs étirés, légendes hors écran). */
+img { display: block; height: auto; }
+
+/* Lien d'évitement */
+.evitement {
+  position: fixed; left: 1rem; top: -4rem; z-index: 200;
+  background: var(--os); color: var(--encre); padding: .7rem 1rem; border-radius: 6px;
+  font-weight: 600; text-decoration: none; transition: top var(--sc-d-base) var(--sc-ease-out);
+}
+.evitement:focus { top: 1rem; }
+
+/* Surtitres */
+.surtitre {
+  font: 600 var(--sc-t-xs)/1.2 var(--sc-font-text);
+  letter-spacing: .16em; text-transform: uppercase; color: var(--ambre); margin: 0 0 1rem;
+}
+.surtitre--terre { color: var(--terre); }
+.surtitre--clair { color: color-mix(in oklab, var(--os) 82%, transparent); }
+
+/* ---------------------------------------------------------------
+   La plaque émaillée (marque)
+   --------------------------------------------------------------- */
+/* La plaque reste sur le héros et part avec lui : fixe, elle recouvrait les prix de l'ardoise. */
+.plaque { position: absolute; top: 1rem; left: var(--bord); z-index: 70; }
+.plaque__lien {
+  display: inline-flex; flex-direction: column; gap: .1rem; text-decoration: none;
+  background: var(--os); color: var(--encre); padding: .55rem .95rem .5rem;
+  border-radius: 6px; box-shadow: 0 6px 18px rgb(0 0 0 / .32), inset 0 0 0 2px var(--terre), inset 0 0 0 4px var(--os), inset 0 0 0 5px color-mix(in oklab, var(--terre) 55%, transparent);
+  transition: transform var(--sc-d-base) var(--sc-ease-out);
+}
+.plaque__lien:hover { transform: translateY(-1px); }
+.plaque__nom { font: 600 1.25rem/1 var(--sc-font-display); letter-spacing: -.01em; }
+.plaque__sous { font: 500 .66rem/1.2 var(--sc-font-text); letter-spacing: .14em; text-transform: uppercase; color: var(--terre); }
+
+/* ---------------------------------------------------------------
+   Le carnet à souche (navigation + commande)
+   --------------------------------------------------------------- */
+.carnet {
+  position: fixed; z-index: 65; right: 1.25rem; top: 1rem; width: var(--carnet-l);
+  color: var(--encre); font-family: var(--sc-font-text);
+  transition: opacity var(--sc-d-slow) var(--sc-ease-out), transform var(--sc-d-slow) var(--sc-ease-out);
+}
+body.addition-visible .carnet { opacity: 0; transform: translateX(110%); pointer-events: none; }
+.carnet__onglet { display: none; }
+.carnet__feuille {
+  position: relative; background:
+    repeating-linear-gradient(to bottom, transparent 0 23px, color-mix(in oklab, var(--carbone) 16%, transparent) 23px 24px),
+    var(--papier);
+  background-position: 0 6px;
+  padding: 1.6rem 1rem 1rem 1.6rem; border-radius: 3px 3px 4px 4px;
+  box-shadow: 0 18px 40px rgb(0 0 0 / .45), 0 2px 0 var(--papier-2), 0 4px 0 color-mix(in oklab, var(--papier-2) 80%, #000);
+  max-height: calc(100vh - 2rem); overflow: auto; scrollbar-width: thin;
+}
+.carnet__feuille::before { /* marge rouge */
+  content: ""; position: absolute; left: 1.05rem; top: 0; bottom: 0; width: 1px; background: color-mix(in oklab, var(--terre) 60%, transparent);
+}
+.carnet__spirale--haut {
+  position: absolute; top: -7px; left: 12px; right: 12px; height: 14px;
+  background: radial-gradient(circle at 50% 50%, #3a2f27 0 3px, transparent 3.5px) 0 0 / 18px 14px repeat-x;
+}
+.carnet__tete { display: flex; justify-content: space-between; align-items: baseline; margin: 0; font: 700 .78rem/1 var(--sc-font-text); letter-spacing: .14em; text-transform: uppercase; }
+.carnet__no { font-weight: 500; color: var(--terre); letter-spacing: .06em; }
+.carnet__date { margin: .45rem 0 .7rem; font: 500 .78rem/1.2 var(--sc-font-text); color: var(--encre-2); }
+.carnet__chapitres { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.carnet__chapitres a {
+  display: flex; align-items: center; gap: .55rem; min-height: 24px; padding: 0 .2rem;
+  color: var(--encre); text-decoration: none; font: 500 .82rem/24px var(--sc-font-text); letter-spacing: .02em;
+  border-radius: 3px;
+}
+.carnet__chapitres a:hover { background: color-mix(in oklab, var(--terre) 10%, transparent); }
+.carnet__chapitres a.actuel { font-weight: 700; color: var(--terre-f); }
+.case { width: 14px; height: 14px; border: 1.5px solid var(--encre); border-radius: 2px; flex: none; display: grid; place-items: center; }
+.case svg { width: 14px; height: 14px; overflow: visible; }
+.case path { fill: none; stroke: var(--terre); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 18; stroke-dashoffset: 18; transition: stroke-dashoffset 420ms var(--sc-ease-out); }
+.coche .case path { stroke-dashoffset: 0; }
+.carnet__trait { height: 0; border-top: 2px dotted color-mix(in oklab, var(--encre) 40%, transparent); margin: .8rem 0 .55rem; }
+.carnet__rubrique { margin: 0 0 .2rem; font: 700 .72rem/1 var(--sc-font-text); letter-spacing: .14em; text-transform: uppercase; color: var(--encre-2); }
+.carnet__lignes, .bloc__lignes { list-style: none; margin: 0; padding: 0; }
+.ligne {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .35rem;
+  font: 600 1.18rem/24px var(--main); color: #26314a;
+}
+.ligne__qte { min-width: 1.3em; }
+.ligne__nom { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ligne.ecrit .ligne__nom, .ligne.ecrit .ligne__qte { animation: ecrire 760ms steps(16, end) both; }
+@keyframes ecrire { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.rayer { /* le petit trait de crayon qui raye une ligne */
+  position: relative; width: 28px; height: 24px; border: 0; background: none; cursor: pointer; color: var(--encre-2);
+}
+.rayer::before { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; height: 2px; background: currentColor; border-radius: 2px; transform: rotate(-12deg); transition: transform var(--sc-d-fast) var(--sc-ease-out), background var(--sc-d-fast); }
+.rayer::after { content: ""; position: absolute; right: 3px; top: 7px; width: 5px; height: 9px; background: var(--terre); border-radius: 1px; transform: rotate(48deg); opacity: .8; }
+.rayer:hover::before, .rayer:focus-visible::before { transform: rotate(-12deg) scaleX(1.2); background: var(--terre); }
+.carnet__vide { margin: .2rem 0 .6rem; font: 500 1.05rem/1.25 var(--main); color: var(--encre-2); }
+.carnet__total { display: flex; justify-content: space-between; margin: .4rem 0 .8rem; padding-top: .35rem; border-top: 1px solid color-mix(in oklab, var(--encre) 30%, transparent); font: 700 .8rem/1.4 var(--sc-font-text); }
+.carnet__total span:last-child { font: 700 1.25rem/1 var(--main); color: #26314a; }
+
+/* La souche (contrôle d'envoi) : un talon perforé qu'on détache */
+.souche {
+  position: relative; display: flex; align-items: center; justify-content: center; width: 100%;
+  min-height: 52px; margin: 0; padding: .9rem 1rem .75rem; border: 0; cursor: pointer; text-decoration: none;
+  background:
+    linear-gradient(135deg, transparent 0 10px, var(--terre) 10px) top left,
+    var(--terre);
+  color: var(--os); font: 700 .86rem/1 var(--sc-font-text); letter-spacing: .12em; text-transform: uppercase;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 6px 14px rgb(0 0 0 / .28);
+  transition: transform var(--sc-d-base) var(--sc-ease-out), box-shadow var(--sc-d-base) var(--sc-ease-out);
+  transform-origin: 0 0;
+}
+.souche__perfo { /* la ligne de perforation, en haut */
+  position: absolute; left: 0; right: 0; top: -5px; height: 10px;
+  background: radial-gradient(circle at 50% 50%, var(--papier) 0 3.2px, transparent 3.6px) 0 0 / 12px 10px repeat-x;
+}
+.souche::after { /* le coin qui se soulève */
+  content: ""; position: absolute; right: 0; bottom: 0; width: 0; height: 0;
+  background: linear-gradient(225deg, var(--nuit) 50%, var(--terre-f) 50%);
+  transition: width var(--sc-d-base) var(--sc-ease-out), height var(--sc-d-base) var(--sc-ease-out);
+}
+.souche:hover, .souche:focus-visible { transform: rotate(-1.2deg) translateY(-1px); box-shadow: 0 10px 20px rgb(0 0 0 / .32); }
+.souche:hover::after, .souche:focus-visible::after { width: 16px; height: 16px; }
+.souche:active { transform: rotate(-1.6deg) translateY(1px); }
+.souche__txt { position: relative; z-index: 1; }
+.souche--petite { min-height: 44px; font-size: .74rem; }
+.souche--petite .souche__perfo { background-image: radial-gradient(circle at 50% 50%, var(--papier) 0 3px, transparent 3.4px); }
+
+/* ---------------------------------------------------------------
+   1 · L'arrivée
+   --------------------------------------------------------------- */
+.acte--arrivee [data-sc-stage] { background: var(--nuit); }
+.arrivee__copy { max-width: min(40rem, 52vw); }
+.arrivee__titre { max-width: 14ch; text-wrap: balance; font-weight: 400; font-variation-settings: "opsz" 144; }
+.arrivee__phrase { max-width: 34ch; margin-top: 1.1rem; color: color-mix(in oklab, var(--os) 88%, transparent); }
+.arrivee__braise .sc-display { font-style: italic; font-weight: 400; color: var(--os); }
+.arrivee__braise .sc-body { max-width: 30ch; margin-left: auto; }
+.arrivee__braise .sc-display { margin-bottom: .5rem; }
+/* Voile d'angle en bas à droite, sous « À point. » : il arrive avec le texte (--sc-p de l'acte,
+   le texte entre à 0,6) et ne pèse pas sur l'image tant que le titre d'accueil est à l'écran. */
+.arrivee__voile-fin { opacity: clamp(0, calc((var(--sc-p, 0) - .48) * 7), 1); }
+@media (max-width: 860px) { .arrivee__voile-fin { display: none; } }
+
+/* L'ardoise de craie (contrôle principal du héros) */
+.ardoise-lien {
+  position: relative; display: inline-grid; place-items: center; margin-top: 1.8rem;
+  min-height: 56px; padding: .6rem 1.6rem .7rem; text-decoration: none;
+  background:
+    radial-gradient(120% 90% at 30% 20%, color-mix(in oklab, #fff 6%, transparent), transparent 60%),
+    #1f2620;
+  color: #efeadf; border-radius: 4px; isolation: isolate;
+  box-shadow: 0 10px 24px rgb(0 0 0 / .4);
+  transition: transform var(--sc-d-base) var(--sc-ease-out);
+}
+.ardoise-lien__cadre { /* le cadre de bois */
+  position: absolute; inset: 0; border-radius: 4px; z-index: -1; pointer-events: none;
+  box-shadow: inset 0 0 0 5px var(--bois), inset 0 0 0 6px color-mix(in oklab, var(--bois) 60%, #000), inset 0 0 14px 6px rgb(0 0 0 / .45);
+}
+.ardoise-lien__txt { font: 700 1.6rem/1 var(--main); letter-spacing: .02em; }
+.ardoise-lien__craie { position: absolute; left: 14%; right: 14%; bottom: 8px; width: 72%; height: 10px; }
+.ardoise-lien__craie path { fill: none; stroke: #efeadf; stroke-width: 2; stroke-linecap: round; opacity: .75; stroke-dasharray: 160; stroke-dashoffset: 160; transition: stroke-dashoffset 520ms var(--sc-ease-out); }
+.ardoise-lien:hover, .ardoise-lien:focus-visible { transform: translateY(-2px) rotate(-.6deg); }
+.ardoise-lien:hover .ardoise-lien__craie path, .ardoise-lien:focus-visible .ardoise-lien__craie path { stroke-dashoffset: 0; }
+.ardoise-lien:active { transform: translateY(1px); }
+
+/* ---------------------------------------------------------------
+   2 · L'ardoise (la carte)
+   --------------------------------------------------------------- */
+.acte--ardoise { background: var(--papier); color: var(--encre); padding: clamp(5rem, 10vw, 8rem) 0 clamp(4rem, 8vw, 7rem); }
+.ardoise {
+  display: grid; grid-template-columns: minmax(16rem, 5fr) 7fr; gap: clamp(2rem, 5vw, 5rem);
+  max-width: 82rem; margin: 0 auto; padding: 0 var(--bord);
+}
+.ardoise__photo { position: relative; }
+.polaroid {
+  /* Un tirage d'art à marge égale, posé sur la carte : la photo du plat survolé. */
+  position: sticky; top: 14vh; margin: 0; padding: .7rem; background: #f7f1e6;
+  box-shadow: 0 1px 1px rgb(0 0 0 / .08), 0 18px 40px rgb(35 28 22 / .26);
+  transform: rotate(-1deg); transition: transform var(--sc-d-slow) var(--sc-ease-out);
+}
+.polaroid img { width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--charbon); transition: opacity 260ms var(--sc-ease-out); }
+.polaroid img.change { opacity: .15; }
+.ardoise__tete h2 { color: var(--encre); font-weight: 400; margin: 0 0 .8rem; }
+.ardoise__tete .sc-body { color: var(--encre-2); max-width: 40ch; }
+
+/* Les planches peintes (onglets) */
+.planches { display: flex; flex-wrap: wrap; gap: .6rem .5rem; margin: 2rem 0 1.4rem; }
+.planche {
+  position: relative; min-height: 44px; padding: .55rem 1rem .5rem; border: 0; cursor: pointer;
+  background:
+    repeating-linear-gradient(92deg, transparent 0 9px, rgb(0 0 0 / .05) 9px 10px, transparent 10px 23px),
+    linear-gradient(to bottom, var(--bois-c), var(--bois));
+  color: #2a1a0e; font: 600 1rem/1 var(--sc-font-display); border-radius: 3px;
+  box-shadow: inset 0 -3px 0 rgb(0 0 0 / .18), 0 3px 8px rgb(35 28 22 / .18);
+  transition: transform var(--sc-d-base) var(--sc-ease-out), background var(--sc-d-base);
+}
+.planche::before, .planche::after { /* les clous */
+  content: ""; position: absolute; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #d8cfc2, #5a4e44);
+}
+.planche::before { left: 5px; } .planche::after { right: 5px; }
+.planche:hover, .planche:focus-visible { transform: translateY(-2px) rotate(-.8deg); }
+.planche[aria-selected="true"] {
+  background:
+    repeating-linear-gradient(92deg, transparent 0 9px, rgb(0 0 0 / .06) 9px 10px, transparent 10px 23px),
+    linear-gradient(to bottom, #b4553a, var(--terre));
+  color: var(--os); transform: translateY(-2px);
+}
+
+/* Les plats */
+.plats { list-style: none; margin: 0; padding: 0; }
+.plat {
+  display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: .4rem 1.4rem;
+  padding: 1.15rem 0; border-top: 1px solid color-mix(in oklab, var(--encre) 18%, transparent);
+}
+.plat:last-child { border-bottom: 1px solid color-mix(in oklab, var(--encre) 18%, transparent); }
+.plat__nom { margin: 0; font: 600 clamp(1.15rem, 1rem + .6vw, 1.5rem)/1.15 var(--sc-font-display); letter-spacing: -.01em; color: var(--encre); transition: color var(--sc-d-base); }
+.plat__mot { font-family: var(--main); font-style: normal; font-weight: 600; color: var(--terre); font-size: 1.05em; margin-left: .3rem; }
+.plat__desc { margin: .3rem 0 0; color: var(--encre-2); font-size: var(--sc-t-sm); line-height: 1.5; max-width: 46ch; }
+.plat__prix { margin: 0; font: 600 1rem/1 var(--sc-font-text); color: var(--encre); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.plat__prix abbr { text-decoration: none; font-size: .78em; color: var(--encre-2); font-weight: 500; }
+.plat.survol .plat__nom { color: var(--terre-f); }
+/* La vignette ne sert que là où le tirage d'art n'a pas la place (tablette, téléphone). */
+.plat__vignette { display: none; }
+
+/* La pique de bois (contrôle d'ajout) */
+.pique {
+  position: relative; display: inline-flex; align-items: center; min-height: 44px; min-width: 9.8rem;
+  padding: 0 .4rem 0 .2rem; border: 0; background: none; cursor: pointer; color: var(--encre);
+}
+.pique__bois { /* la pique : bambou, pointe à droite */
+  position: absolute; left: 0; right: 0; top: 50%; height: 5px; margin-top: 8px;
+  background: linear-gradient(to bottom, #e2c38f, #b48a52);
+  clip-path: polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%);
+  border-radius: 2px 0 0 2px;
+}
+.pique__bois i { /* les morceaux qui glissent sur la pique quand le plat est noté */
+  position: absolute; top: -6px; width: 14px; height: 17px; border-radius: 4px;
+  background: radial-gradient(circle at 40% 30%, #c06a3a, #6e2d16); box-shadow: inset 0 -2px 0 rgb(0 0 0 / .25);
+  left: -10px; opacity: 0; transition: left 420ms var(--sc-ease-out), opacity 200ms;
+}
+.pique__drapeau { /* le petit fanion de papier noué sur la pique */
+  position: relative; z-index: 1; margin-bottom: 10px; padding: .32rem .7rem .3rem; background: var(--os);
+  border: 1px solid color-mix(in oklab, var(--encre) 25%, transparent); border-radius: 2px 6px 6px 2px;
+  font: 600 .82rem/1 var(--sc-font-text); letter-spacing: .02em; color: var(--encre);
+  box-shadow: 0 2px 4px rgb(35 28 22 / .14); transform-origin: 0 100%;
+  transition: transform var(--sc-d-base) var(--sc-ease-out), background var(--sc-d-base), color var(--sc-d-base);
+}
+.pique:hover .pique__drapeau, .pique:focus-visible .pique__drapeau { transform: rotate(-4deg) translateY(-1px); }
+.pique:hover .pique__bois i:nth-child(1), .pique:focus-visible .pique__bois i:nth-child(1) { left: 12%; opacity: .55; }
+.pique:active .pique__drapeau { transform: translateY(1px); }
+.pique[aria-pressed="true"] .pique__drapeau { background: var(--terre); color: var(--os); border-color: var(--terre); }
+.pique[aria-pressed="true"] .pique__bois i { opacity: 1; }
+.pique[aria-pressed="true"] .pique__bois i:nth-child(1) { left: 44%; }
+.pique[aria-pressed="true"] .pique__bois i:nth-child(2) { left: 58%; transition-delay: 60ms; }
+.pique[aria-pressed="true"] .pique__bois i:nth-child(3) { left: 72%; transition-delay: 120ms; }
+
+/* ---------------------------------------------------------------
+   3 · Le feu (le pic)
+   --------------------------------------------------------------- */
+.acte--feu [data-sc-stage] { background: var(--nuit); }
+.feu__copy { max-width: min(36rem, 46vw); }
+.feu__copy > * { margin: 0; }
+.feu__copy > * + * { margin-top: 1rem; }
+.feu__copy .sc-display--lg { font-weight: 400; }
+.feu__copy .sc-lede { max-width: 32ch; }
+/* Ambre éclairci (le même que l'italique du teaser) : la phrase passe devant les flammes. */
+.feu__fin { font-style: italic; font-weight: 400; color: #f0b56e; max-width: 18ch; text-shadow: 0 1px 18px rgb(15 12 10 / .55); }
+.feu__copy { display: grid; }
+.feu__copy > * { grid-area: 1 / 1; align-self: end; }
+/* Le titre et sa première phrase forment un seul bloc : sur deux lignes, le titre ne recouvre plus la phrase. */
+.feu__copy > .feu__tete { align-self: start; }
+.feu__tete > * { margin: 0; }
+.feu__tete > * + * { margin-top: 1rem; }
+
+/* ---------------------------------------------------------------
+   4 · Les mains (rail)
+   --------------------------------------------------------------- */
+.acte--mains [data-sc-stage] { background: var(--charbon); display: flex; align-items: center; }
+.rail { display: flex; align-items: flex-end; gap: clamp(1.5rem, 3vw, 3rem); padding: 0 var(--bord); padding-right: calc(var(--carnet-l) + 3rem); }
+.rail__tete { flex: 0 0 min(26rem, 80vw); align-self: center; }
+.rail__tete h2 { font-weight: 400; margin: 0 0 1rem; }
+.rail__tete .sc-body { color: var(--sc-ink-soft); max-width: 32ch; }
+.main-item { flex: 0 0 clamp(15rem, 22vw, 21rem); }
+.main-item img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 2px; background: #241c17; }
+.main-item h3 { margin: 1rem 0 .1rem; font: 400 var(--sc-t-xl)/1.1 var(--sc-font-display); }
+.main-item__qui { margin: 0 0 .6rem; font: 600 .74rem/1.3 var(--sc-font-text); letter-spacing: .14em; text-transform: uppercase; color: var(--ambre); }
+.main-item p:last-child { margin: 0; color: var(--sc-ink-soft); font-size: var(--sc-t-sm); line-height: 1.55; }
+.rail__fin { flex: 0 0 min(22rem, 70vw); align-self: center; }
+.rail__fin p { font-style: italic; font-weight: 400; color: var(--ambre); }
+@media (prefers-reduced-motion: no-preference) {
+  .acte--mains .main-item { opacity: calc(.55 + .45 * min(1, var(--sc-p, 0) * 4)); }
+}
+
+/* ---------------------------------------------------------------
+   5 · La maison (frise)
+   --------------------------------------------------------------- */
+.acte--maison { background: var(--terre-f); color: var(--os); padding: clamp(5rem, 10vw, 8rem) 0; }
+.maison { max-width: 82rem; margin: 0 auto; padding: 0 var(--bord); padding-right: calc(var(--carnet-l) + 3rem); }
+.maison__tete h2 { font-weight: 400; max-width: 16ch; margin: 0 0 clamp(2.5rem, 6vw, 4.5rem); }
+.frise { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(3rem, 7vw, 6rem); }
+.frise__temps { display: grid; grid-template-columns: 7fr 5fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: center; }
+.frise__temps:nth-child(even) { grid-template-columns: 5fr 7fr; }
+.frise__temps:nth-child(even) figure { order: 2; }
+.frise__temps figure { margin: 0; }
+.frise__temps img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2px; background: #5e2717; }
+.frise__an { margin: 0 0 .4rem; font: 400 clamp(2.6rem, 2rem + 3vw, 4.6rem)/1 var(--sc-font-display); color: #f0b38a; font-variant-numeric: lining-nums; }
+.frise__txt h3 { margin: 0 0 .6rem; font: 400 var(--sc-t-xl)/1.15 var(--sc-font-display); }
+.frise__txt p:last-child { margin: 0; color: color-mix(in oklab, var(--os) 86%, transparent); max-width: 38ch; line-height: 1.6; }
+.maison__fut { margin: clamp(3rem, 7vw, 5rem) 0 0; padding-top: 2rem; border-top: 1px solid color-mix(in oklab, var(--os) 30%, transparent); font-size: var(--sc-t-lg); max-width: 48ch; line-height: 1.5; }
+.maison__fut .frise__an { display: block; font-size: var(--sc-t-xl); margin-bottom: .5rem; }
+
+/* ---------------------------------------------------------------
+   6 · Les terrasses
+   --------------------------------------------------------------- */
+.acte--terrasses { background: var(--nuit); padding: clamp(5rem, 10vw, 8rem) 0; }
+.terrasses { max-width: 82rem; margin: 0 auto; padding: 0 var(--bord); padding-right: calc(var(--carnet-l) + 3rem); }
+.terrasses__tete h2 { font-weight: 400; margin: 0 0 .8rem; }
+.terrasses__direct { margin: 0 0 3rem; font-size: var(--sc-t-lg); color: var(--sc-ink-soft); }
+.terrasses__direct strong { color: var(--os); font-weight: 600; }
+.terrasses__liste { list-style: none; margin: 0; padding: 0; }
+.terrasse {
+  display: grid; grid-template-columns: 1.1fr 1.2fr 1.2fr auto; gap: 1.5rem; align-items: start;
+  padding: 1.8rem 0; border-top: 1px solid color-mix(in oklab, var(--os) 16%, transparent);
+}
+.terrasse:last-child { border-bottom: 1px solid color-mix(in oklab, var(--os) 16%, transparent); }
+.terrasse h3 { margin: 0; font: 400 var(--sc-t-xl)/1.05 var(--sc-font-display); }
+.terrasse__type { margin: .4rem 0 0; font: 600 .72rem/1.3 var(--sc-font-text); letter-spacing: .14em; text-transform: uppercase; color: var(--ambre); }
+.terrasse__adr, .terrasse__heures { margin: 0; line-height: 1.55; color: var(--os); }
+.terrasse__adr span, .terrasse__jour { color: var(--sc-ink-soft); font-size: var(--sc-t-sm); }
+.terrasse__etat { display: inline-flex; align-items: center; gap: .45rem; margin-top: .35rem; font-weight: 600; font-size: var(--sc-t-sm); }
+.terrasse__etat::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.terrasse__etat.ouvert { color: #e7a35b; }
+.terrasse__etat.ouvert::before { box-shadow: 0 0 0 4px color-mix(in oklab, #e7a35b 25%, transparent); }
+.terrasse__etat.ferme { color: var(--sc-ink-soft); }
+.terrasse__etat.ferme::before { background: transparent; border: 1.5px solid currentColor; }
+.terrasse__gestes { display: flex; flex-direction: column; align-items: flex-start; gap: .8rem; }
+
+/* La carte pliée (itinéraire) */
+.carte-pliee {
+  position: relative; display: inline-flex; align-items: center; min-height: 46px; padding: .55rem .95rem .55rem 2.6rem;
+  text-decoration: none; color: var(--encre); font: 600 .86rem/1 var(--sc-font-text);
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / .07) 0 1px, transparent 1px) 0 0 / 33.3% 100%,
+    var(--papier);
+  border-radius: 2px; box-shadow: 0 4px 10px rgb(0 0 0 / .3);
+  clip-path: polygon(0 4%, 33.3% 0, 66.6% 4%, 100% 0, 100% 96%, 66.6% 100%, 33.3% 96%, 0 100%);
+  transition: transform var(--sc-d-base) var(--sc-ease-out);
+}
+.carte-pliee__plis { /* le tracé de route et l'épingle */
+  position: absolute; left: .6rem; top: 50%; width: 1.5rem; height: 1.5rem; margin-top: -.75rem;
+  background:
+    radial-gradient(circle at 75% 28%, var(--terre) 0 3.5px, transparent 4px),
+    linear-gradient(135deg, transparent 46%, var(--terre) 46% 54%, transparent 54%) 0 0 / 100% 100%;
+  opacity: .9;
+}
+.carte-pliee:hover, .carte-pliee:focus-visible { transform: translateY(-2px) scaleX(1.03); }
+.carte-pliee:active { transform: translateY(1px); }
+
+/* Le chevalet de table (réserver) */
+.chevalet {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .75rem 1.3rem .6rem;
+  text-decoration: none; color: var(--encre); font: 600 .86rem/1 var(--sc-font-display); letter-spacing: .02em;
+  background: linear-gradient(to bottom, #f6efe3, #e6dccb);
+  clip-path: polygon(7% 0, 93% 0, 100% 100%, 0 100%);
+  box-shadow: inset 0 -4px 0 color-mix(in oklab, var(--terre) 75%, transparent);
+  transition: transform var(--sc-d-base) var(--sc-ease-out);
+}
+.chevalet::before { content: ""; position: absolute; left: 50%; top: 5px; width: 30%; height: 1px; margin-left: -15%; background: var(--terre); }
+.chevalet:hover, .chevalet:focus-visible { transform: translateY(-2px) perspective(200px) rotateX(8deg); }
+.chevalet:active { transform: translateY(1px); }
+
+/* ---------------------------------------------------------------
+   7 · L'addition
+   --------------------------------------------------------------- */
+/* Pas de position ici : la scène doit rester sticky (moteur), sinon l'addition défile au lieu
+   de s'épingler et laisse un vide noir en bas de page. Sticky suffit aux enfants absolus. */
+.addition { overflow: hidden; background: var(--nuit); display: grid; grid-template-rows: 1fr auto; }
+.addition__fond { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+.addition__voile { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(15 12 10 / .9) 0%, rgb(15 12 10 / .55) 55%, rgb(15 12 10 / .25) 100%); }
+.addition__inner {
+  position: relative; z-index: 2; display: grid; grid-template-columns: 1fr minmax(18rem, 22rem); gap: clamp(2rem, 6vw, 6rem);
+  align-items: center; max-width: 76rem; width: 100%; margin: 0 auto; padding: 5.5rem var(--bord) 2rem;
+}
+.addition__txt h2 { font-weight: 400; margin: 0 0 1rem; }
+.addition__txt .sc-body { max-width: 38ch; color: color-mix(in oklab, var(--os) 88%, transparent); }
+
+/* Le bloc est posé sur la section sombre : sa couleur par défaut est claire (aide, note).
+   Seules les feuilles de papier portent l'encre sombre. */
+.bloc { position: relative; color: var(--os); }
+.bloc__feuille, .bloc__carbone {
+  color: var(--encre);
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 25px, color-mix(in oklab, var(--carbone) 16%, transparent) 25px 26px),
+    var(--papier);
+  padding: 1.3rem 1.2rem 1rem 1.6rem; border-radius: 3px 3px 0 0; min-height: 15rem;
+}
+.bloc__feuille { position: relative; z-index: 2; box-shadow: 0 20px 44px rgb(0 0 0 / .5); }
+.bloc__carbone { position: absolute; inset: 0 0 auto 0; z-index: 1; height: 100%; background-color: #e6dccb; visibility: hidden; }
+/* Le double n'existe qu'une fois la feuille détachée : avant, il dort sous l'original. */
+.bloc.envoye .bloc__carbone { visibility: visible; }
+.bloc__tete { margin: 0; font: 700 .74rem/1 var(--sc-font-text); letter-spacing: .14em; text-transform: uppercase; }
+.bloc__date { margin: .4rem 0 .8rem; font-size: .78rem; color: var(--encre-2); }
+.bloc__lignes .ligne { font-size: 1.3rem; line-height: 26px; }
+.bloc__lignes--carbone .ligne { color: var(--carbone); opacity: .85; filter: blur(.3px); }
+.bloc__vide { font: 500 1.15rem/1.3 var(--main); color: var(--encre-2); margin: .4rem 0; }
+.bloc__vide a { color: var(--terre-f); }
+.bloc__total { display: flex; justify-content: space-between; align-items: baseline; margin: .8rem 0 0; padding-top: .5rem; border-top: 1px solid color-mix(in oklab, var(--encre) 30%, transparent); font: 700 .8rem/1 var(--sc-font-text); }
+.bloc__total span:last-child { font: 700 1.5rem/1 var(--main); color: #26314a; }
+.bloc .souche { margin-top: 0; }
+.bloc .souche__perfo { background-image: radial-gradient(circle at 50% 50%, #0f0c0a 0 3.2px, transparent 3.6px); }
+.bloc__aide { margin: .9rem 0 0; font-size: var(--sc-t-xs); color: color-mix(in oklab, var(--os) 78%, transparent); line-height: 1.5; }
+.bloc__note { margin: .4rem 0 0; min-height: 1.2em; font: 600 1.05rem/1.2 var(--main); color: var(--ambre); }
+.tampon {
+  position: absolute; right: 1rem; top: 45%; margin: 0; padding: .35rem .7rem;
+  border: 3px double var(--terre); color: var(--terre); border-radius: 4px; transform: rotate(-9deg);
+  font: 700 .9rem/1 var(--sc-font-text); letter-spacing: .14em; text-transform: uppercase; opacity: 0;
+}
+.bloc.envoye .tampon { opacity: .9; transition: opacity 300ms 700ms; }
+.bloc.envoye .bloc__feuille { animation: arracher 900ms var(--sc-ease-in-out) forwards; }
+.bloc.envoye .souche { visibility: hidden; }
+@keyframes arracher {
+  0%   { transform: none; }
+  25%  { transform: translate(-4px, -10px) rotate(-2.5deg); }
+  100% { transform: translate(60%, -140%) rotate(14deg); opacity: 0; }
+}
+.pied {
+  position: relative; z-index: 2; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 2rem;
+  max-width: 76rem; width: 100%; margin: 0 auto; padding: 1.2rem var(--bord) 1.6rem;
+  border-top: 1px solid color-mix(in oklab, var(--os) 14%, transparent);
+  font-size: var(--sc-t-xs); color: color-mix(in oklab, var(--os) 70%, transparent);
+}
+.pied p { margin: 0; }
+
+/* ---------------------------------------------------------------
+   Focus
+   --------------------------------------------------------------- */
+:where(a, button):focus-visible { outline: 2px solid var(--ambre); outline-offset: 3px; }
+.acte--ardoise :where(a, button):focus-visible { outline-color: var(--terre-f); }
+
+/* ---------------------------------------------------------------
+   Tablette et téléphone : le carnet devient une languette en bas
+   --------------------------------------------------------------- */
+@media (max-width: 1099px) {
+  .carnet { top: auto; bottom: 0; right: 0; left: 0; width: auto; }
+  .carnet__onglet {
+    display: flex; align-items: center; gap: .7rem; width: 100%; min-height: 56px; padding: .6rem 1.2rem;
+    border: 0; cursor: pointer; text-align: left; color: var(--encre);
+    background: var(--papier); box-shadow: 0 -8px 24px rgb(0 0 0 / .35); border-radius: 10px 10px 0 0;
+  }
+  .carnet__onglet .carnet__spirale { width: 34px; height: 12px; background: radial-gradient(circle, #3a2f27 0 3px, transparent 3.5px) 0 0 / 11px 12px repeat-x; }
+  .carnet__onglet-txt { font: 700 .8rem/1 var(--sc-font-text); letter-spacing: .12em; text-transform: uppercase; }
+  .carnet__onglet-etat { margin-left: auto; font: 600 1.15rem/1 var(--main); color: #26314a; }
+  .carnet__feuille { display: none; max-height: 70vh; border-radius: 0; box-shadow: none; }
+  .carnet.ouvert .carnet__feuille { display: block; }
+  .carnet__spirale--haut { display: none; }
+  .rail, .maison, .terrasses { padding-right: var(--bord); }
+  .ardoise { grid-template-columns: 1fr; }
+  .ardoise__photo { display: none; }
+  /* Chaque plat porte sa photo : vignette à gauche du texte, prix et pique sur la ligne du dessous. */
+  .plat {
+    grid-template-columns: 4.75rem 1fr auto;
+    grid-template-areas: "v txt txt" "prix prix pique";
+    gap: .7rem 1rem;
+  }
+  .plat__vignette {
+    grid-area: v; align-self: start; display: block; width: 4.75rem; height: auto; aspect-ratio: 1;
+    object-fit: cover; border-radius: 3px; background: var(--charbon);
+    box-shadow: 0 0 0 3px #f7f1e6, 0 6px 14px rgb(35 28 22 / .22);
+  }
+  .plat__txt { grid-area: txt; }
+  .plat__prix { grid-area: prix; }
+  .plat .pique { grid-area: pique; justify-self: end; }
+  .terrasse { grid-template-columns: 1fr 1fr; }
+  .terrasse__gestes { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; }
+  .pied { padding-bottom: 5rem; }
+  .addition__inner { grid-template-columns: 1fr; padding-top: 5rem; align-content: center; }
+}
+@media (max-width: 860px) {
+  /* Le moteur réaligne la copie de fin à gauche : la phrase suit, et le titre italique respire. */
+  .arrivee__braise .sc-body { margin-left: 0; }
+  .arrivee__braise .sc-display { margin-bottom: .5rem; }
+  /* Sur téléphone, le texte occupe toute la largeur du bas de l'image : le voile monte du bas,
+     plus dense, pour tenir le contraste au-dessus des flammes et des lanternes. */
+  .acte--arrivee .sc-scrim--lead,
+  .acte--feu .sc-scrim--lead {
+    background: linear-gradient(to top,
+      color-mix(in oklab, var(--sc-canvas) 94%, transparent) 0%,
+      color-mix(in oklab, var(--sc-canvas) 86%, transparent) 30%,
+      color-mix(in oklab, var(--sc-canvas) 55%, transparent) 50%,
+      transparent 68%);
+  }
+}
+@media (max-width: 640px) {
+  .arrivee__copy { max-width: none; }
+  .arrivee__titre { font-size: clamp(2.3rem, 9.5vw, 3rem); }
+  .feu__copy { max-width: none; }
+  .frise__temps, .frise__temps:nth-child(even) { grid-template-columns: 1fr; }
+  .frise__temps:nth-child(even) figure { order: 0; }
+  .terrasse { grid-template-columns: 1fr; gap: .9rem; }
+  .bloc__feuille, .bloc__carbone { min-height: 12rem; }
+  .plaque__sous { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ligne.ecrit .ligne__nom, .ligne.ecrit .ligne__qte { animation: none; }
+  .bloc.envoye .bloc__feuille { animation: none; opacity: 0; }
+  .case path { transition: none; }
+}

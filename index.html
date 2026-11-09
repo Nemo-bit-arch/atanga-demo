@@ -1,0 +1,453 @@
+<!doctype html>
+<!--
+  Atanga · braiserie du bord de mer (Libreville). Site de démonstration, marque fictive.
+  Moteur : scroll-craft (scrollcraft.js / scrollcraft.css, jamais modifiés).
+  Grammaire : « Service du soir » (voir BRIEF.md). Textes à valider : textes.md.
+-->
+<html lang="fr" data-type="place">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atanga · Poisson braisé du bord de mer à Libreville</title>
+<meta name="description" content="Braiserie du bord de mer à Libreville : capitaine braisé, poulet nyembwe, atanga sur la braise. Composez votre commande dans le carnet du serveur et envoyez-la en cuisine.">
+<meta name="page-type" content="place">
+<meta name="site-kind" content="other">
+<meta name="page-kind" content="place">
+<meta name="theme-color" content="#15100c">
+<meta property="og:title" content="Atanga · Poisson braisé du bord de mer à Libreville">
+<meta property="og:description" content="Chaque soir dès 18 h, le foyer s'allume face à l'estuaire.">
+<meta property="og:image" content="https://nemo-bit-arch.github.io/atanga-demo/assets/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://nemo-bit-arch.github.io/atanga-demo/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<!-- Démonstration envoyée par lien : pas d'indexation par les moteurs de recherche. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2315100c'/><circle cx='16' cy='17' r='8' fill='%23a3472b'/><path d='M16 6c1 3 4 4 4 8a4 4 0 0 1-8 0c0-3 3-5 4-8z' fill='%23f0a24a'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="stylesheet" href="atanga.css">
+</head>
+<body>
+<a class="evitement" href="#ardoise">Aller au contenu</a>
+<span data-sc-progress></span>
+
+<!-- La plaque émaillée : la marque, rien d'autre. Le carnet tient lieu de navigation. -->
+<header class="plaque" aria-label="Atanga">
+  <a href="#top" class="plaque__lien">
+    <span class="plaque__nom">Atanga</span>
+    <span class="plaque__sous">braiserie du bord de mer</span>
+  </a>
+</header>
+
+<!-- ================================================================
+     LE CARNET À SOUCHE : navigation + commande (geste signature)
+     ================================================================ -->
+<aside class="carnet" id="carnet" aria-label="Carnet du serveur : chapitres et commande">
+  <button class="carnet__onglet" type="button" aria-expanded="false" aria-controls="carnet-feuille">
+    <span class="carnet__spirale" aria-hidden="true"></span>
+    <span class="carnet__onglet-txt">Carnet du serveur</span>
+    <span class="carnet__onglet-etat" data-resume>vierge</span>
+  </button>
+  <div class="carnet__feuille" id="carnet-feuille">
+    <div class="carnet__spirale carnet__spirale--haut" aria-hidden="true"></div>
+    <p class="carnet__tete"><span>Atanga</span> <span class="carnet__no">Bon n° 0241</span></p>
+    <p class="carnet__date" data-horloge>Libreville</p>
+    <nav aria-label="Chapitres de la soirée">
+      <ol class="carnet__chapitres">
+        <li><a href="#top" data-chap="arrivee"><span class="case" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-8"/></svg></span>L'arrivée</a></li>
+        <li><a href="#ardoise" data-chap="ardoise"><span class="case" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-8"/></svg></span>L'ardoise</a></li>
+        <li><a href="#feu" data-chap="feu"><span class="case" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-8"/></svg></span>Le feu</a></li>
+        <li><a href="#mains" data-chap="mains"><span class="case" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-8"/></svg></span>Les mains</a></li>
+        <li><a href="#maison" data-chap="maison"><span class="case" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-8"/></svg></span>La maison</a></li>
+        <li><a href="#terrasses" data-chap="terrasses"><span class="case" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-8"/></svg></span>Les terrasses</a></li>
+      </ol>
+    </nav>
+    <div class="carnet__trait" aria-hidden="true"></div>
+    <p class="carnet__rubrique">Votre commande</p>
+    <ul class="carnet__lignes" data-lignes aria-live="polite"></ul>
+    <p class="carnet__vide" data-vide>Le carnet est encore vierge. Choisissez vos plats sur l'ardoise.</p>
+    <p class="carnet__total" data-total-zone hidden><span>Total indiqué</span> <span data-total>0</span></p>
+    <a class="souche souche--petite" href="#addition" data-vers-addition>
+      <span class="souche__perfo" aria-hidden="true"></span>
+      <span class="souche__txt">Relire l'addition</span>
+    </a>
+  </div>
+</aside>
+
+<main id="top">
+
+  <!-- ================================================================
+       1 · L'ARRIVÉE : scrub. La caméra avance jusqu'à la braise.
+       ================================================================ -->
+  <section class="acte acte--arrivee" data-sc-act="scrub" data-sc-span="2.8" data-sc-dwell="0.3" data-chapitre="arrivee" aria-labelledby="titre-arrivee">
+    <div data-sc-stage>
+      <picture>
+        <source media="(max-width: 760px)" srcset="assets/hero-poster-m.webp">
+        <img class="sc-stage__poster" src="assets/hero-poster.webp" alt="Une paillote de raffia au bord de l'estuaire de Libreville, à l'heure bleue. Le feu du foyer de pierre monte entre les tables nappées de lin et leurs lanternes.">
+      </picture>
+      <video data-sc-scrub data-sc-src="assets/hero.mp4" data-sc-src-mobile="assets/hero-m.mp4" muted playsinline preload="none"></video>
+      <div class="sc-scrim sc-scrim--lead" aria-hidden="true"></div>
+      <div class="sc-scrim sc-scrim--trail arrivee__voile-fin" aria-hidden="true"></div>
+
+      <div class="sc-copy sc-copy--lead arrivee__copy" data-sc-cue="0 0.52 0">
+        <p class="surtitre">Libreville, bord de mer</p>
+        <h1 id="titre-arrivee" class="sc-display sc-display--xl arrivee__titre">Le poisson braisé du bord de mer, à Libreville.</h1>
+        <p class="sc-body arrivee__phrase">Chaque soir dès 18&nbsp;h, le foyer s'allume face à l'estuaire. Avancez jusqu'à la braise.</p>
+        <a class="ardoise-lien" href="#ardoise">
+          <span class="ardoise-lien__cadre" aria-hidden="true"></span>
+          <span class="ardoise-lien__txt">Lire l'ardoise</span>
+          <svg class="ardoise-lien__craie" viewBox="0 0 160 12" aria-hidden="true"><path d="M4 7c30-4 70-5 150-2"/></svg>
+        </a>
+      </div>
+
+      <div class="sc-copy sc-copy--trail arrivee__braise" data-sc-cue="0.6 1 0.12 0.06">
+        <p class="sc-display sc-display--xl">À point.</p>
+        <p class="sc-body">Capitaine entier, banane mûre, atanga sur la grille. La fumée vous indique la table.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       2 · L'ARDOISE : flow + pointeur. La carte, sur papier.
+       ================================================================ -->
+  <section class="acte acte--ardoise" id="ardoise" data-chapitre="ardoise" aria-labelledby="titre-ardoise">
+    <div class="ardoise">
+      <div class="ardoise__photo" aria-hidden="true">
+        <figure class="polaroid" data-polaroid>
+          <img src="assets/plats/capitaine.webp" alt="" width="900" height="900" data-polaroid-img>
+        </figure>
+      </div>
+
+      <div class="ardoise__carte">
+        <header class="ardoise__tete" data-sc-in data-sc-stagger="60">
+          <p class="surtitre surtitre--terre">Ce soir sur la grille</p>
+          <h2 id="titre-ardoise" class="sc-display sc-display--xl">L'ardoise</h2>
+          <p class="sc-body">Choisissez à votre rythme. Chaque plat retenu s'inscrit dans le carnet du serveur.</p>
+        </header>
+
+        <div class="planches" role="tablist" aria-label="Rubriques de l'ardoise">
+          <button class="planche" role="tab" id="tab-partager" aria-controls="cat-partager" aria-selected="false" tabindex="-1" data-cat="partager"><span>À partager</span></button>
+          <button class="planche" role="tab" id="tab-braises" aria-controls="cat-braises" aria-selected="true" data-cat="braises"><span>Braises</span></button>
+          <button class="planche" role="tab" id="tab-marmites" aria-controls="cat-marmites" aria-selected="false" tabindex="-1" data-cat="marmites"><span>Marmites</span></button>
+          <button class="planche" role="tab" id="tab-accomp" aria-controls="cat-accomp" aria-selected="false" tabindex="-1" data-cat="accomp"><span>Accompagnements</span></button>
+          <button class="planche" role="tab" id="tab-douceurs" aria-controls="cat-douceurs" aria-selected="false" tabindex="-1" data-cat="douceurs"><span>Douceurs et boissons</span></button>
+        </div>
+
+        <!-- À PARTAGER -->
+        <ul class="plats" id="cat-partager" role="tabpanel" aria-labelledby="tab-partager" hidden>
+          <li class="plat" data-plat="atanga" data-prix="2000" data-photo="assets/plats/atanga.webp">
+            <img class="plat__vignette" src="assets/plats/atanga.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Atanga braisés</h3><p class="plat__desc">Les prunes violettes du Gabon, posées sur la braise jusqu'à ce que leur chair devienne crème. Sel gris.</p></div>
+            <p class="plat__prix">2&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Atanga braisés"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="soya" data-prix="3000" data-photo="assets/plats/soya.webp">
+            <img class="plat__vignette" src="assets/plats/soya.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Brochettes soya</h3><p class="plat__desc">Bœuf mariné au piment doux et aux oignons, grillé sur pique de bois.</p></div>
+            <p class="plat__prix">3&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Brochettes soya"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="crevettes" data-prix="7500" data-photo="assets/plats/crevettes.webp">
+            <img class="plat__vignette" src="assets/plats/crevettes.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Crevettes du Cap Estérias</h3><p class="plat__desc">Saisies à l'ail et au citron vert, servies dans leur jus.</p></div>
+            <p class="plat__prix">7&nbsp;500 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Crevettes du Cap Estérias"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+        </ul>
+
+        <!-- BRAISES -->
+        <ul class="plats" id="cat-braises" role="tabpanel" aria-labelledby="tab-braises">
+          <li class="plat" data-plat="capitaine" data-prix="12000" data-photo="assets/plats/capitaine.webp">
+            <img class="plat__vignette" src="assets/plats/capitaine.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Le Capitaine du large <em class="plat__mot">pour deux</em></h3><p class="plat__desc">Le poisson entier, entaillé, braisé lentement avec oignons et piment vert.</p></div>
+            <p class="plat__prix">12&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Le Capitaine du large"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="bar" data-prix="9000" data-photo="assets/plats/bar.webp">
+            <img class="plat__vignette" src="assets/plats/bar.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Bar de l'estuaire</h3><p class="plat__desc">Chair blanche et peau croustillante, citron vert et feuilles de basilic africain.</p></div>
+            <p class="plat__prix">9&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Bar de l'estuaire"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="machoiron" data-prix="8000" data-photo="assets/plats/machoiron.webp">
+            <img class="plat__vignette" src="assets/plats/machoiron.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Machoiron braisé</h3><p class="plat__desc">Le poisson des rivières, fumé à cœur, à la sauce tomate pimentée.</p></div>
+            <p class="plat__prix">8&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Machoiron braisé"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="poulet" data-prix="6500" data-photo="assets/plats/poulet.webp">
+            <img class="plat__vignette" src="assets/plats/poulet.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Poulet braisé citronnelle</h3><p class="plat__desc">Mariné une nuit à la citronnelle et au gingembre, doré sur la grille.</p></div>
+            <p class="plat__prix">6&nbsp;500 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Poulet braisé citronnelle"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+        </ul>
+
+        <!-- MARMITES -->
+        <ul class="plats" id="cat-marmites" role="tabpanel" aria-labelledby="tab-marmites" hidden>
+          <li class="plat" data-plat="nyembwe" data-prix="7500" data-photo="assets/plats/nyembwe.webp">
+            <img class="plat__vignette" src="assets/plats/nyembwe.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Poulet nyembwe</h3><p class="plat__desc">Mijoté dans la sauce de graine de palme, comme le dimanche à la maison.</p></div>
+            <p class="plat__prix">7&nbsp;500 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Poulet nyembwe"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="odika" data-prix="8500" data-photo="assets/plats/odika.webp">
+            <img class="plat__vignette" src="assets/plats/odika.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Poisson sauce odika</h3><p class="plat__desc">La sauce chocolat de mangue sauvage, épaisse et fumée, sur un filet de bar.</p></div>
+            <p class="plat__prix">8&nbsp;500 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Poisson sauce odika"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="feuilles" data-prix="5000" data-photo="assets/plats/feuilles.webp">
+            <img class="plat__vignette" src="assets/plats/feuilles.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Feuilles de manioc</h3><p class="plat__desc">Pilées, cuites longuement avec poisson fumé et huile de palme.</p></div>
+            <p class="plat__prix">5&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Feuilles de manioc"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="bouillon" data-prix="6000" data-photo="assets/plats/bouillon.webp">
+            <img class="plat__vignette" src="assets/plats/bouillon.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Bouillon de queue de bœuf</h3><p class="plat__desc">Clair, pimenté, parfumé au gingembre : celui des fins de soirée.</p></div>
+            <p class="plat__prix">6&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Bouillon de queue de bœuf"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+        </ul>
+
+        <!-- ACCOMPAGNEMENTS -->
+        <ul class="plats" id="cat-accomp" role="tabpanel" aria-labelledby="tab-accomp" hidden>
+          <li class="plat" data-plat="baton" data-prix="500" data-photo="assets/plats/accompagnements.webp">
+            <img class="plat__vignette" src="assets/plats/accompagnements.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Bâton de manioc</h3><p class="plat__desc">Roulé dans sa feuille, tiède, à rompre à la main.</p></div>
+            <p class="plat__prix">500 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Bâton de manioc"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="banane" data-prix="1000" data-photo="assets/plats/accompagnements.webp">
+            <img class="plat__vignette" src="assets/plats/accompagnements.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Banane plantain braisée</h3><p class="plat__desc">Mûre, caramélisée au feu, fendue au couteau.</p></div>
+            <p class="plat__prix">1&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Banane plantain braisée"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="riz" data-prix="1000" data-photo="assets/plats/accompagnements.webp">
+            <img class="plat__vignette" src="assets/plats/accompagnements.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Riz blanc</h3><p class="plat__desc">Grain long, cuit simplement.</p></div>
+            <p class="plat__prix">1&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Riz blanc"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="piment" data-prix="0" data-photo="assets/plats/accompagnements.webp">
+            <img class="plat__vignette" src="assets/plats/accompagnements.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Piment de la maison</h3><p class="plat__desc">Écrasé chaque matin, doux puis franc.</p></div>
+            <p class="plat__prix">offert</p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Piment de la maison"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+        </ul>
+
+        <!-- DOUCEURS ET BOISSONS -->
+        <ul class="plats" id="cat-douceurs" role="tabpanel" aria-labelledby="tab-douceurs" hidden>
+          <li class="plat" data-plat="ananas" data-prix="2000" data-photo="assets/plats/ananas.webp">
+            <img class="plat__vignette" src="assets/plats/ananas.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Ananas braisé au miel</h3><p class="plat__desc">Tranches épaisses passées sur la braise, miel de forêt.</p></div>
+            <p class="plat__prix">2&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Ananas braisé au miel"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="beignets" data-prix="1500" data-photo="assets/plats/beignets.webp">
+            <img class="plat__vignette" src="assets/plats/beignets.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Beignets</h3><p class="plat__desc">Une dizaine, chauds, poudrés de sucre.</p></div>
+            <p class="plat__prix">1&nbsp;500 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Beignets"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="bissap" data-prix="1000" data-photo="assets/plats/boissons.webp">
+            <img class="plat__vignette" src="assets/plats/boissons.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Jus de bissap</h3><p class="plat__desc">Fleurs d'hibiscus infusées, menthe fraîche, servi glacé.</p></div>
+            <p class="plat__prix">1&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Jus de bissap"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+          <li class="plat" data-plat="gingembre" data-prix="1000" data-photo="assets/plats/boissons.webp">
+            <img class="plat__vignette" src="assets/plats/boissons.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <div class="plat__txt"><h3 class="plat__nom">Jus de gingembre</h3><p class="plat__desc">Pressé du jour, citron vert : il pique, puis il rafraîchit.</p></div>
+            <p class="plat__prix">1&nbsp;000 <abbr title="francs CFA">FCFA</abbr></p>
+            <button class="pique" type="button" aria-pressed="false" aria-label="Je prends : Jus de gingembre"><span class="pique__bois" aria-hidden="true"><i></i><i></i><i></i></span><span class="pique__drapeau">Je le prends</span></button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       3 · LE FEU : scrub + pin. Le pic : le poisson se retourne sous la main.
+       ================================================================ -->
+  <section class="acte acte--feu" id="feu" data-sc-act="scrub" data-sc-span="3.6" data-sc-dwell="0.22" data-chapitre="feu" aria-labelledby="titre-feu">
+    <div data-sc-stage>
+      <img class="sc-stage__poster" src="assets/feu-poster.webp" alt="Un capitaine entier dans sa grille de fer, au-dessus des braises, dans la fumée.">
+      <video data-sc-scrub data-sc-src="assets/feu.mp4" data-sc-src-mobile="assets/feu-m.mp4" muted playsinline preload="none"></video>
+      <div class="sc-scrim sc-scrim--lead" aria-hidden="true"></div>
+      <div class="sc-copy sc-copy--lead feu__copy">
+        <div class="feu__tete">
+          <h2 id="titre-feu" class="sc-display sc-display--lg" data-sc-cue="0.02 0.4 0.1 0.18">Le geste du grilleur</h2>
+          <p class="sc-lede" data-sc-cue="0.06 0.4 0.12 0.18">Une seule fois, au bon moment.</p>
+        </div>
+        <p class="sc-lede" data-sc-cue="0.36 0.72">Le capitaine passe vingt minutes sur la braise. Il n'est retourné qu'une fois, quand la peau se détache seule de la grille.</p>
+        <p class="sc-display sc-display--md feu__fin" data-sc-cue="0.7 1 0.12 0.06">C'est ce geste que vous venez de faire.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       4 · LES MAINS : pan. Les producteurs, de côté.
+       ================================================================ -->
+  <section class="acte acte--mains" id="mains" data-sc-act="pan" data-sc-span="5.2" data-chapitre="mains" aria-labelledby="titre-mains">
+    <div data-sc-stage>
+      <div class="rail" data-sc-pan="0.04">
+        <div class="rail__tete">
+          <h2 id="titre-mains" class="sc-display sc-display--lg">Les mains derrière l'ardoise</h2>
+          <p class="sc-body">Rien n'arrive sur notre foyer sans être passé par ces mains le matin même.</p>
+        </div>
+        <article class="main-item">
+          <img src="assets/mains/pecheurs.webp" alt="Des mains de pêcheur tiennent un capitaine argenté au-dessus d'une pirogue, à l'aube." width="900" height="1200" loading="lazy">
+          <h3>Owendo</h3>
+          <p class="main-item__qui">Les pêcheurs de la baie</p>
+          <p>Les pirogues rentrent avant l'aube. Le capitaine et le bar sont choisis sur le sable, à la lumière des lampes frontales, puis remontés en glace jusqu'au bord de mer.</p>
+        </article>
+        <article class="main-item">
+          <img src="assets/mains/manioc.webp" alt="Des mains ficellent des bâtons de manioc roulés dans leurs feuilles, sur un étal de marché." width="900" height="1200" loading="lazy">
+          <h3>Mont-Bouët</h3>
+          <p class="main-item__qui">Les vendeuses du marché</p>
+          <p>Les bâtons de manioc arrivent roulés la veille dans leurs feuilles, ficelés à la main. Les feuilles de manioc sont pilées sous nos yeux.</p>
+        </article>
+        <article class="main-item">
+          <img src="assets/mains/palme.webp" alt="Une corbeille de graines de palme rouge sombre, tenue à deux mains." width="900" height="1200" loading="lazy">
+          <h3>Ntoum</h3>
+          <p class="main-item__qui">Les palmeraies</p>
+          <p>La graine de palme du nyembwe est cueillie mûre, rouge sombre, puis pressée pour donner sa sauce épaisse.</p>
+        </article>
+        <article class="main-item">
+          <img src="assets/mains/foret.webp" alt="Des atanga violets et des pains d'odika fumés, posés sur une feuille dans des mains ouvertes." width="900" height="1200" loading="lazy">
+          <h3>Kango</h3>
+          <p class="main-item__qui">Les cueilleurs</p>
+          <p>L'odika vient des amandes de la mangue sauvage, séchées et fumées en pain. Les atanga arrivent avec la saison des pluies.</p>
+        </article>
+        <div class="rail__fin">
+          <p class="sc-display sc-display--md">Quatre mains, puis les vôtres.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       5 · LA MAISON : reveal. Chaque date ouvre un volet.
+       ================================================================ -->
+  <section class="acte acte--maison" id="maison" data-chapitre="maison" aria-labelledby="titre-maison">
+    <div class="maison">
+      <header class="maison__tete" data-sc-in data-sc-stagger="60">
+        <p class="surtitre surtitre--clair">La maison</p>
+        <h2 id="titre-maison" class="sc-display sc-display--xl">D'un fût coupé à deux terrasses</h2>
+      </header>
+      <ol class="frise">
+        <li class="frise__temps" data-sc-act="flow">
+          <figure data-sc-reveal="left" data-sc-reveal-at="0.12 0.42"><img src="assets/maison/2009.webp" alt="Un demi-fût d'huile transformé en grill, posé sur un trottoir la nuit, la braise rouge." width="1200" height="900" loading="lazy"></figure>
+          <div class="frise__txt"><p class="frise__an">2009</p><h3>Un fût sur le trottoir</h3><p>Un soir de saison sèche, un demi-fût d'huile posé sur le trottoir du bord de mer, trois capitaines et une glacière. Les passants s'arrêtent pour l'odeur.</p></div>
+        </li>
+        <li class="frise__temps" data-sc-act="flow">
+          <figure data-sc-reveal="right" data-sc-reveal-at="0.12 0.42"><img src="assets/maison/2016.webp" alt="Une paillote de raffia sur poteaux de bois sombre, un foyer de pierre, des tables face à l'eau." width="1200" height="900" loading="lazy"></figure>
+          <div class="frise__txt"><p class="frise__an">2016</p><h3>La paillote</h3><p>Le trottoir devient une terrasse. Un toit de raffia sur des poteaux de bois sombre, un foyer de pierre, douze tables face à l'estuaire.</p></div>
+        </li>
+        <li class="frise__temps" data-sc-act="flow">
+          <figure data-sc-reveal="left" data-sc-reveal-at="0.12 0.42"><img src="assets/maison/2022.webp" alt="Une terrasse de déjeuner ombragée à Akanda, tables dressées, lumière du midi." width="1200" height="900" loading="lazy"></figure>
+          <div class="frise__txt"><p class="frise__an">2022</p><h3>Angondjé</h3><p>Une seconde terrasse ouvre à Akanda, pour le déjeuner et pour celles et ceux qui habitent loin de la mer.</p></div>
+        </li>
+      </ol>
+      <p class="maison__fut"><span class="frise__an">Aujourd'hui</span> <strong>Le fût voyageur.</strong> Le grill se déplace jusqu'à vos réceptions, des mariages aux fins d'année.</p>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       6 · LES TERRASSES : flow + état en direct (heure de Libreville).
+       ================================================================ -->
+  <section class="acte acte--terrasses" id="terrasses" data-chapitre="terrasses" aria-labelledby="titre-terrasses">
+    <div class="terrasses">
+      <header class="terrasses__tete" data-sc-in data-sc-stagger="60">
+        <h2 id="titre-terrasses" class="sc-display sc-display--xl">Ce soir, où s'asseoir</h2>
+        <p class="terrasses__direct" data-direct>Libreville, ce soir.</p>
+      </header>
+      <ul class="terrasses__liste">
+        <li class="terrasse" data-terrasse="bord">
+          <div><h3>Bord de mer</h3><p class="terrasse__type">Terrasse face à l'estuaire</p></div>
+          <p class="terrasse__adr">Boulevard de l'Indépendance, Louis<br><span>Sur place, à emporter</span></p>
+          <p class="terrasse__heures"><span class="terrasse__jour">Du mardi au dimanche</span><br>18&nbsp;h à 0&nbsp;h&nbsp;30<br><span class="terrasse__etat" data-etat>…</span></p>
+          <div class="terrasse__gestes">
+            <a class="carte-pliee" href="https://www.google.com/maps/search/?api=1&amp;query=Boulevard+de+l%27Ind%C3%A9pendance+Louis+Libreville" target="_blank" rel="noopener"><span class="carte-pliee__plis" aria-hidden="true"></span><span class="carte-pliee__txt">Tracer l'itinéraire</span></a>
+            <a class="chevalet" href="#" data-reserver="Bord de mer"><span class="chevalet__txt">Réserver une table</span></a>
+          </div>
+        </li>
+        <li class="terrasse" data-terrasse="angondje">
+          <div><h3>Angondjé</h3><p class="terrasse__type">Terrasse du déjeuner, Akanda</p></div>
+          <p class="terrasse__adr">Angondjé, Akanda<br><span>Sur place, à emporter, livraison</span></p>
+          <p class="terrasse__heures"><span class="terrasse__jour">Tous les jours</span><br>12&nbsp;h à 15&nbsp;h · 18&nbsp;h&nbsp;30 à 23&nbsp;h<br><span class="terrasse__etat" data-etat>…</span></p>
+          <div class="terrasse__gestes">
+            <a class="carte-pliee" href="https://www.google.com/maps/search/?api=1&amp;query=Angondj%C3%A9+Akanda" target="_blank" rel="noopener"><span class="carte-pliee__plis" aria-hidden="true"></span><span class="carte-pliee__txt">Voir le quartier</span></a>
+            <a class="chevalet" href="#" data-reserver="Angondjé"><span class="chevalet__txt">Réserver une table</span></a>
+          </div>
+        </li>
+        <li class="terrasse" data-terrasse="fut">
+          <div><h3>Le fût voyageur</h3><p class="terrasse__type">Fêtes et réceptions</p></div>
+          <p class="terrasse__adr">Libreville, Owendo, Akanda<br><span>Chez vous, sur demande</span></p>
+          <p class="terrasse__heures"><span class="terrasse__jour">Sur rendez-vous</span><br>Devis sous quarante-huit heures</p>
+          <div class="terrasse__gestes">
+            <a class="chevalet" href="#" data-reserver="Le fût voyageur"><span class="chevalet__txt">Demander une date</span></a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       7 · L'ADDITION : pin. Le carnet au centre, la feuille se détache.
+       ================================================================ -->
+  <section class="acte acte--addition" id="addition" data-sc-act="pin" data-sc-span="1.35" aria-labelledby="titre-addition">
+    <div data-sc-stage class="addition">
+      <img class="addition__fond" src="assets/table.webp" alt="" aria-hidden="true">
+      <div class="addition__voile" aria-hidden="true"></div>
+      <div class="addition__inner">
+        <div class="addition__txt" data-sc-cue="0 1 0 0">
+          <h2 id="titre-addition" class="sc-display sc-display--lg">Votre carnet est prêt.</h2>
+          <p class="sc-body">Relisez votre commande, puis détachez la feuille : elle part en cuisine par WhatsApp, et le double reste avec vous.</p>
+        </div>
+
+        <div class="bloc" data-sc-cue="0 1 0 0">
+          <div class="bloc__carbone" aria-hidden="true">
+            <p class="bloc__tete">Atanga · Bon n° 0241 · double</p>
+            <ul class="bloc__lignes bloc__lignes--carbone" data-lignes-carbone></ul>
+            <p class="tampon">Transmis en cuisine</p>
+          </div>
+          <div class="bloc__feuille" data-feuille>
+            <p class="bloc__tete">Atanga · Bon n° 0241</p>
+            <p class="bloc__date" data-horloge>Libreville</p>
+            <ul class="bloc__lignes" data-lignes-addition></ul>
+            <p class="bloc__vide" data-vide-addition>Le carnet est encore vierge. <a href="#ardoise">Choisissez vos plats sur l'ardoise.</a></p>
+            <p class="bloc__total"><span>Total indiqué</span> <span data-total-addition>0 FCFA</span></p>
+          </div>
+          <button class="souche" type="button" data-envoyer>
+            <span class="souche__perfo" aria-hidden="true"></span>
+            <span class="souche__txt">Envoyer en cuisine</span>
+          </button>
+          <p class="bloc__aide">La commande s'ouvre dans WhatsApp, prête à être envoyée. Rien n'est réglé en ligne.</p>
+          <p class="bloc__note" data-note role="status"></p>
+        </div>
+      </div>
+
+      <footer class="pied">
+        <p><strong>Atanga</strong>, braiserie du bord de mer · Libreville</p>
+        <p>Site de démonstration. Photographies et films générés pour l'illustration.</p>
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<script src="scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script src="atanga.js"></script>
+</body>
+</html>
