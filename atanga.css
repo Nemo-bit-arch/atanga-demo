@@ -170,7 +170,10 @@ body.addition-visible .carnet { opacity: 0; transform: translateX(110%); pointer
    --------------------------------------------------------------- */
 .acte--arrivee [data-sc-stage] { background: var(--nuit); }
 .arrivee__copy { max-width: min(40rem, 52vw); }
-.arrivee__titre { max-width: 14ch; text-wrap: balance; font-weight: 400; font-variation-settings: "opsz" 144; }
+.arrivee__titre { max-width: 14ch; text-wrap: balance; font-weight: 400; font-variation-settings: "opsz" 144;
+  /* Plafond selon la hauteur : dans une fenêtre basse (portable, téléphone couché), les quatre
+     lignes du titre débordaient par le haut de l'écran. */
+  font-size: min(var(--sc-t-4xl), 12vh); font-size: min(var(--sc-t-4xl), 12svh); }
 .arrivee__phrase { max-width: 34ch; margin-top: 1.1rem; color: color-mix(in oklab, var(--os) 88%, transparent); }
 .arrivee__braise .sc-display { font-style: italic; font-weight: 400; color: var(--os); }
 .arrivee__braise .sc-body { max-width: 30ch; margin-left: auto; }
